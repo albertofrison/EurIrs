@@ -38,7 +38,10 @@ series2 %>%
   #geom_hline(yintercept = avg+sd, linetype = "dotted", size = 0.3, color = "red") + # these 3 lines make sense only if you focus on a single rate
   geom_point(size = 1) +
   geom_line ()+
-  xlab("Date")+
+  xlab("")+
   ylab("Rates") +
-  theme(axis.text.x = element_text(angle = 90, hjust =1)) 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle ("EURIRS Rates trend") +
+  theme (legend.position = "bottom")
+  # scale_fill_discrete(name = "RATE") 
   #scale_x_date(limit=c(as.Date("2021-10-01"),as.Date("2021-12-31")))
