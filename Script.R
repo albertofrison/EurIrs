@@ -31,17 +31,17 @@ sd <- series2 %>%
   sd()
 
 series2 %>%
-# filter (Rate_Name == my_rate) %>% # comment this line to plot all rates, or use this line to focus in a single rate only
+  filter (Rate_Name == my_rate) %>% # comment this line to plot all rates, or use this line to focus in a single rate only
   ggplot (aes(x= as.Date(EURIRS, "%d/%m/%Y"), y=Rate_Value, color=Rate_Name)) +
-  #geom_hline(yintercept = avg, linetype = "dotted",  size = 0.5, color = "blue") + # these 3 lines make sense only if you focus on a single rate
-  #geom_hline(yintercept = avg-sd, linetype = "dotted", size = 0.3, color = "red") + # these 3 lines make sense only if you focus on a single rate
-  #geom_hline(yintercept = avg+sd, linetype = "dotted", size = 0.3, color = "red") + # these 3 lines make sense only if you focus on a single rate
+  geom_hline(yintercept = avg, linetype = "dotted",  size = 0.5, color = "blue") + # these 3 lines make sense only if you focus on a single rate
+  geom_hline(yintercept = avg-sd, linetype = "dotted", size = 0.3, color = "red") + # these 3 lines make sense only if you focus on a single rate
+  geom_hline(yintercept = avg+sd, linetype = "dotted", size = 0.3, color = "red") + # these 3 lines make sense only if you focus on a single rate
   geom_point(size = 1) +
   geom_line ()+
   xlab("")+
   ylab("Rates") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle ("EURIRS Rates trend") +
-  theme (legend.position = "bottom")
+  theme_bw() +
+  theme (legend.position = "bottom",axis.text.x = element_text(angle = 90, hjust = 1))
   # scale_fill_discrete(name = "RATE") 
   #scale_x_date(limit=c(as.Date("2021-10-01"),as.Date("2021-12-31")))
