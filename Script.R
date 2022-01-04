@@ -30,6 +30,10 @@ sd <- series2 %>%
   pull(Rate_Value) %>%
   sd()
 
+last_rate <- series2 %>%
+  filter(Rate_Name == my_rate & as.Date(EURIRS, "%d/%m/%Y") == max(as.Date(EURIRS, "%d/%m/%Y"))) %>%
+  pull(Rate_Value)
+
 series2 %>%
   filter (Rate_Name == my_rate) %>% # comment this line to plot all rates, or use this line to focus in a single rate only
   ggplot (aes(x= as.Date(EURIRS, "%d/%m/%Y"), y=Rate_Value, color=Rate_Name)) +
@@ -40,7 +44,7 @@ series2 %>%
   geom_line ()+
   xlab("")+
   ylab("Rates") +
-  ggtitle ("EURIRS Rates trend") +
+  ggtitle (paste("EURIRS Rates trend - Rate Name:", my_rate,"- Last Value:", last_rate)) +
   theme_bw() +
   theme (legend.position = "bottom",axis.text.x = element_text(angle = 90, hjust = 1))
   # scale_fill_discrete(name = "RATE") 
