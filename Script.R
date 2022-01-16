@@ -3,6 +3,7 @@
 #1 - IMPORT THE DATA
 library(tidyverse)
 library(rvest)
+options (digits = 2)
 
 # Reading EURIRS data from website (updated daily)
 url <- "https://www.euribor.it/eurirs-oggi/"
@@ -29,6 +30,18 @@ past_years <- select(past_years,-X) #removing colum that appeared????
 #1.3 OPTIONAL - APPEND THE TWO DATAFRAMES TOGETHER, SO YOU CONCATENATE THE YEARS ONE AFTER ANOTHER
 series2 <- rbind(past_years,series2)
 
+#1.4 ADDING PMT COLUMN WITH RELATED INSTALLMENT FOR A CERTAIN DEBT CONTRACT AT GIVEN PARAMETERS
+# any bank will apply a pricing over the base rata
+bank_spread <- 0.73
+# how much money will the lender ask?
+C <- 100800
+
+# adds payment in the data frame, fomula calculates the pym (posticipated)
+# the interest i is the sum of base and bank spread (ask your bank) divided by 100 to have a rate in percentage and by 12 to have a monthly rate, so 1200
+# the number of periods n is calculated from the rate name which contains the number of years (substr...) * 12 to have the number of months in the period 300 in 25 years for instance
+series2 <- series2 %>%
+  mutate (pmt = as.numeric((1 + 1/(((1+(bank_spread+Rate_Value)/1200))^(as.numeric(substr(Rate_Name,2,3))*12) - 1))*
+         ((bank_spread+Rate_Value)/1200)*C))
 
 
 #2 - USE THE DATA
@@ -68,7 +81,12 @@ series2 %>%
   theme_bw() +
   theme (legend.position = "bottom",axis.text.x = element_text(angle = 90, hjust = 1))
 
-#experimental :)
-x<- series2%>%
-  filter (Rate_Name == my_rate)
-hist(x$Rate_Value)
+### next developments:
+#1 add in the chart the value of the pmt every each---- 15 days?
+#x= seq (min(as.Date(series2$EURIRS, "%d/%m/%Y")), max((as.Date(series2$EURIRS, "%d/%m/%Y"))), by = 15)
+# some code      
+#max (as.Date(series2$EURIRS, "%d/%m/%Y"))
+#min (as.Date(series2$EURIRS, "%d/%m/%Y"))
+#c <- seq (min(as.Date(series2$EURIRS, "%d/%m/%Y")), max((as.Date(series2$EURIRS, "%d/%m/%Y"))), by = 15)
+#geom_label(aes(x= as.Date(EURIRS, "%d/%m/%Y"), y= Rate_Value, label = pmt )) +
+
