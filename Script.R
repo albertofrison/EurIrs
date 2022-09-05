@@ -4,6 +4,7 @@
 library(tidyverse)
 library(rvest)
 options (digits = 2)
+rm(list=ls())
 
 # Reading EURIRS data from website (updated daily)
 url <- "https://www.euribor.it/eurirs-oggi/"
@@ -12,8 +13,10 @@ series <- html_table(page, fill = TRUE) #Parses tables into data frames, page co
 series <- data.frame(series) # not even sure if this command is needed
 
 # taming the date (greatest issue in all my scripts)
-series$EURIRS <- format(paste(series$EURIRS, "/2022", sep=""), format = "%d/%m/%Y")
+series$EURIRS <- format(paste(series$X.EURIRS, "/2022", sep=""), format = "%d/%m/%Y")
 
+#removing erroneous date column
+series <- select (series,-X.EURIRS)
 
 #Tidy data by making a table where every column is a variable, every row is an observation, every cell is a single value
 series2 <- series %>%
